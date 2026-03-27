@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Surligneur d'assignés Basecamp - Options</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Surligneur d'assignés Basecamp</h1>
+
+      <section class="row">
+        <div class="field">
+          <label for="opacityInput">Opacité du surlignage</label>
+          <input id="opacityInput" type="range" min="0.05" max="0.8" step="0.01" />
+          <div class="value"><span id="opacityValue">0.28</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Gestion des personnes</h2>
+        <div class="hint">
+          Pour chaque personne : activation/désactivation, description (pour repérer facilement), et couleur propre.
+        </div>
+        <div id="personsList" class="persons-list"></div>
+      </section>
+
+      <section>
+        <h2>Ajouter une personne</h2>
+        <div class="row">
+          <div class="field">
+            <label for="newPersonIdInput">Person ID</label>
+            <input id="newPersonIdInput" type="text" placeholder="12345678" autocomplete="off" spellcheck="false" />
+          </div>
+
+          <div class="field">
+            <label for="newDescriptionInput">Description</label>
+            <input
+              id="newDescriptionInput"
+              type="text"
+              placeholder="ex: Personne 1"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+
+          <div class="field">
+            <label for="newColorInput">Couleur</label>
+            <div class="color-picker">
+              <div id="newColorPreview" class="color-preview" aria-hidden="true"></div>
+              <input
+                id="newColorInput"
+                type="text"
+                class="hex-input"
+                placeholder="#ffeb3b"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+            <button id="openPaletteNewButton" type="button" class="secondary">Choisir via palette</button>
+          </div>
+        </div>
+
+        <div class="row buttons">
+          <label class="inline-checkbox">
+            <input id="newEnabledInput" type="checkbox" checked />
+            <span>Activé</span>
+          </label>
+          <button id="addPersonButton" type="button">Ajouter / Mettre à jour</button>
+          <button id="clearAllButton" type="button" class="secondary">Vider tout</button>
+        </div>
+      </section>
+
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+    </div>
+
+    <!-- Palette custom (anti-natif) -->
+    <div id="palettePopover" class="palette-popover" hidden>
+      <div class="palette-head">
+        <div id="palettePreview" class="color-preview" aria-hidden="true"></div>
+        <button id="closePaletteButton" type="button" class="secondary">Fermer</button>
+      </div>
+      <div id="paletteGrid" class="color-grid" aria-label="Choisir une couleur"></div>
+    </div>
+
+    <script src="options.js"></script>
+  </body>
+</html>
+
