@@ -7,7 +7,7 @@
   const TODO_SELECTOR = 'li.todo';
   const ASSIGNMENT_SELECTOR = 'li.assignment';
   const HIGHLIGHT_CONTAINER_SELECTOR = `${KANBAN_CARD_SELECTOR}, ${TODO_SELECTOR}, ${ASSIGNMENT_SELECTOR}`;
-  const AVATAR_SELECTOR = 'img[data-avatar-for-person-id]';
+  const AVATAR_SELECTOR = '[data-avatar-for-person-id]';
 
   const STYLE_ID = 'bc-person-highlight-style';
   const root = document.documentElement;
@@ -112,6 +112,15 @@
     );
   }
 
+  function getPersonIdFromAvatarElement(el) {
+    if (!(el instanceof Element)) return '';
+    const direct = el.getAttribute('data-avatar-for-person-id') ?? el.dataset?.avatarForPersonId ?? '';
+    if (direct) return String(direct);
+    const wrapped = el.closest?.('[data-avatar-for-person-id]');
+    if (!wrapped) return '';
+    return String(wrapped.getAttribute('data-avatar-for-person-id') ?? wrapped.dataset?.avatarForPersonId ?? '');
+  }
+
   function highlightTarget(target, personStyle) {
     if (!(target instanceof HTMLElement)) return;
     if (personStyle?.overlay && personStyle?.outline) {
@@ -130,6 +139,19 @@
     }
   }
 
+  function findMatchingPersonStyleInContainer(container) {
+    if (!(container instanceof Element)) return null;
+    const avatars = container.querySelectorAll(AVATAR_SELECTOR);
+    for (const avatarEl of avatars) {
+      const pid = getPersonIdFromAvatarElement(avatarEl);
+      if (!state.enabledPersonIds.has(pid)) continue;
+      const personStyle = state.personStyles.get(pid);
+      if (!personStyle) continue;
+      return personStyle;
+    }
+    return null;
+  }
+
   function refreshAllCards() {
     if (state.enabledPersonIds.size === 0) {
       clearAllHighlights();
@@ -142,16 +164,9 @@
     const containers = document.querySelectorAll(HIGHLIGHT_CONTAINER_SELECTOR);
 
     for (const container of containers) {
-      const avatars = container.querySelectorAll(AVATAR_SELECTOR);
-      for (const img of avatars) {
-        const id = img.getAttribute('data-avatar-for-person-id') ?? img.dataset?.avatarForPersonId ?? '';
-        const pid = String(id);
-        if (!state.enabledPersonIds.has(pid)) continue;
-        const personStyle = state.personStyles.get(pid);
-        if (!personStyle) continue;
-        targets.set(container, personStyle);
-        break;
-      }
+      const personStyle = findMatchingPersonStyleInContainer(container);
+      if (!personStyle) continue;
+      targets.set(container, personStyle);
     }
 
     for (const [target, personStyle] of targets) highlightTarget(target, personStyle);
@@ -160,14 +175,22 @@
   function setupMutationObserver() {
     if (!document.documentElement) return;
 
-    // Batch cards added/updated in the DOM and process them incrementally.
+    // Batch DOM updates and process once per frame.
     let scheduled = false;
+    const pendingNodes = new Set();
     const pendingTargets = new Map(); // target -> personStyle
 
     function queueCard(target, personStyle) {
       if (target instanceof HTMLElement && personStyle?.overlay && personStyle?.outline) {
         if (!pendingTargets.has(target)) pendingTargets.set(target, personStyle);
       }
+    }
+
+    function queueContainer(container) {
+      if (!(container instanceof HTMLElement)) return;
+      const personStyle = findMatchingPersonStyleInContainer(container);
+      if (!personStyle) return;
+      queueCard(container, personStyle);
     }
 
     function queueFromNode(node) {
@@ -177,7 +200,7 @@
 
       // Si un avatar arrive seul dans un conteneur existant.
       if (node.matches?.(AVATAR_SELECTOR)) {
-        const pid = String(node.getAttribute('data-avatar-for-person-id') ?? node.dataset?.avatarForPersonId ?? '');
+        const pid = getPersonIdFromAvatarElement(node);
         if (state.enabledPersonIds.has(pid)) {
           const personStyle = state.personStyles.get(pid);
           const target = getTargetForAvatar(node);
@@ -185,26 +208,18 @@
         }
       }
 
-      const containers = [];
-      if (node.matches?.(HIGHLIGHT_CONTAINER_SELECTOR)) containers.push(node);
-      if (node.querySelectorAll) containers.push(...node.querySelectorAll(HIGHLIGHT_CONTAINER_SELECTOR));
-
-      for (const container of containers) {
-        const avatars = container.querySelectorAll?.(AVATAR_SELECTOR) || [];
-        for (const img of avatars) {
-          const id = img.getAttribute('data-avatar-for-person-id') ?? img.dataset?.avatarForPersonId ?? '';
-          const pid = String(id);
-          if (!state.enabledPersonIds.has(pid)) continue;
-          const personStyle = state.personStyles.get(pid);
-          if (!personStyle) continue;
-          queueCard(container, personStyle);
-          break;
-        }
-      }
+      const closestContainer = node.closest?.(HIGHLIGHT_CONTAINER_SELECTOR);
+      if (closestContainer) queueContainer(closestContainer);
+      if (!node.querySelectorAll) return;
+      for (const container of node.querySelectorAll(HIGHLIGHT_CONTAINER_SELECTOR)) queueContainer(container);
     }
 
     function flush() {
       scheduled = false;
+      if (pendingNodes.size) {
+        for (const node of pendingNodes) queueFromNode(node);
+        pendingNodes.clear();
+      }
       if (!pendingTargets.size) return;
       for (const [target, personStyle] of pendingTargets) highlightTarget(target, personStyle);
       pendingTargets.clear();
@@ -219,13 +234,12 @@
 
         for (const node of m.addedNodes) {
           if (node?.nodeType !== 1) continue;
-          queueFromNode(node);
+          pendingNodes.add(node);
         }
-
-        if (!scheduled) {
-          scheduled = true;
-          requestAnimationFrame(flush);
-        }
+      }
+      if (!scheduled) {
+        scheduled = true;
+        requestAnimationFrame(flush);
       }
     });
 
@@ -315,7 +329,7 @@
       })
       .finally(() => {
         // Retry briefly at startup in case storage/page state is delayed.
-        if (attempt >= 6) return;
+        if (attempt >= 3) return;
         if (state.enabledPersonIds.size > 0) return;
         setTimeout(() => bootstrapSettingsLoad(attempt + 1), 250 * (attempt + 1));
       });
