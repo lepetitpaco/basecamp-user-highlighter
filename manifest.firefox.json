@@ -9,6 +9,14 @@
     "default_title": "Surligneur d'assignes Basecamp",
     "default_popup": "options.html"
   },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "basecamp-highlight@addon.local",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
   "content_scripts": [
     {
       "matches": ["https://*.basecamp.com/*", "https://3.basecamp.com/*"],
