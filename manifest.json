@@ -3,11 +3,14 @@
   "name": "Surligneur d'assignes Basecamp",
   "version": "1.0.0",
   "description": "Surligne les to-dos/kanban de Basecamp ou apparaissent vos assignees configurees.",
-  "permissions": ["storage"],
+  "permissions": ["storage", "contextMenus"],
   "host_permissions": ["https://*.basecamp.com/*", "https://3.basecamp.com/*"],
   "action": {
     "default_title": "Surligneur d'assignes Basecamp",
     "default_popup": "options.html"
+  },
+  "background": {
+    "scripts": ["background.js"]
   },
   "content_scripts": [
     {

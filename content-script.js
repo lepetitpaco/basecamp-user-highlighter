@@ -81,6 +81,23 @@
     });
   }
 
+  function storageSet(items) {
+    try {
+      const maybe = storage.local.set(items);
+      if (maybe && typeof maybe.then === 'function') return maybe;
+    } catch {
+      // fallback callback API below
+    }
+
+    return new Promise((resolve, reject) => {
+      try {
+        storage.local.set(items, () => resolve());
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
   const state = {
     // Map personId -> computed overlay colors for current opacity.
     personStyles: new Map(),
@@ -119,6 +136,114 @@
     const wrapped = el.closest?.('[data-avatar-for-person-id]');
     if (!wrapped) return '';
     return String(wrapped.getAttribute('data-avatar-for-person-id') ?? wrapped.dataset?.avatarForPersonId ?? '');
+  }
+
+  function getPersonNameFromAvatarElement(el) {
+    if (!(el instanceof Element)) return '';
+    const candidates = [];
+    const pushValue = (v) => {
+      const text = String(v || '').trim();
+      if (!text) return;
+      if (text.toLowerCase() === 'avatar') return;
+      candidates.push(text);
+    };
+
+    pushValue(el.getAttribute('alt'));
+    pushValue(el.getAttribute('title'));
+    pushValue(el.getAttribute('aria-label'));
+    pushValue(el.getAttribute('data-avatar-name'));
+    pushValue(el.dataset?.avatarName);
+
+    const wrapped = el.closest?.('[data-avatar-for-person-id]');
+    if (wrapped) {
+      pushValue(wrapped.getAttribute('alt'));
+      pushValue(wrapped.getAttribute('title'));
+      pushValue(wrapped.getAttribute('aria-label'));
+      pushValue(wrapped.getAttribute('data-avatar-name'));
+      pushValue(wrapped.dataset?.avatarName);
+    }
+
+    return candidates[0] || '';
+  }
+
+  function findAvatarElementFromNode(node) {
+    if (!(node instanceof Element)) return null;
+    if (node.matches?.(AVATAR_SELECTOR)) return node;
+    return node.closest?.(AVATAR_SELECTOR) || null;
+  }
+
+  function copyText(text) {
+    const value = String(text || '').trim();
+    if (!value) return false;
+    try {
+      if (navigator?.clipboard?.writeText) {
+        navigator.clipboard.writeText(value).catch(() => {});
+        return true;
+      }
+    } catch {
+      // continue to fallback
+    }
+
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = value;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      textarea.style.pointerEvents = 'none';
+      document.body.appendChild(textarea);
+      textarea.select();
+      const ok = document.execCommand('copy');
+      textarea.remove();
+      return !!ok;
+    } catch {
+      return false;
+    }
+  }
+
+  function getRuntimeApi() {
+    if (typeof browser !== 'undefined' && browser?.runtime) return browser.runtime;
+    if (typeof chrome !== 'undefined' && chrome?.runtime) return chrome.runtime;
+    return null;
+  }
+
+  const contextState = {
+    avatarEl: null,
+    personId: '',
+    personName: '',
+  };
+
+  function updateContextFromNode(node) {
+    const avatarEl = findAvatarElementFromNode(node);
+    if (!avatarEl) return false;
+    const personId = getPersonIdFromAvatarElement(avatarEl);
+    if (!personId) return false;
+
+    contextState.avatarEl = avatarEl;
+    contextState.personId = personId;
+    contextState.personName = getPersonNameFromAvatarElement(avatarEl);
+    return true;
+  }
+
+  async function addPersonFromContext() {
+    const personId = String(contextState.personId || '').trim();
+    if (!personId) return;
+
+    const result = await storageGet(['persons', 'highlightColor']);
+    const personsObj = result?.persons && typeof result.persons === 'object' && !Array.isArray(result.persons)
+      ? { ...result.persons }
+      : {};
+
+    const existing = personsObj[personId] || {};
+    const description = contextState.personName || existing.description || '';
+    const defaultColor = existing.color || result?.highlightColor || '#ffeb3b';
+
+    personsObj[personId] = {
+      enabled: existing.enabled !== false,
+      description,
+      color: defaultColor,
+    };
+
+    await storageSet({ persons: personsObj });
   }
 
   function highlightTarget(target, personStyle) {
@@ -358,6 +483,36 @@
       // If persons or styling changes, reload settings and reapply.
       if (keys.some((k) => k === 'persons' || k === 'highlightColor' || k === 'highlightOpacity' || k === 'personIds')) {
         loadSettings();
+      }
+    });
+
+    document.addEventListener(
+      'contextmenu',
+      (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        if (!target) return;
+        updateContextFromNode(target);
+      },
+      true
+    );
+
+    const runtime = getRuntimeApi();
+    runtime?.onMessage?.addListener?.((message) => {
+      const action = message?.action;
+      if (action !== 'bc-copy-person-id' && action !== 'bc-add-person') return;
+
+      if (!contextState.personId && contextState.avatarEl instanceof Element) {
+        updateContextFromNode(contextState.avatarEl);
+      }
+      if (!contextState.personId) return;
+
+      if (action === 'bc-copy-person-id') {
+        copyText(contextState.personId);
+        return;
+      }
+
+      if (action === 'bc-add-person') {
+        addPersonFromContext().catch(() => {});
       }
     });
   } catch {
