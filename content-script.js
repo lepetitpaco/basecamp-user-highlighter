@@ -163,6 +163,17 @@
       pushValue(wrapped.dataset?.avatarName);
     }
 
+    // Fallbacks: avatar wrappers can hold an <img alt="Name"> or sibling labels.
+    const scope = wrapped || el;
+    if (scope?.querySelectorAll) {
+      const nestedCandidates = scope.querySelectorAll('img[alt], img[title], [aria-label], [title]');
+      for (const node of nestedCandidates) {
+        pushValue(node.getAttribute('alt'));
+        pushValue(node.getAttribute('title'));
+        pushValue(node.getAttribute('aria-label'));
+      }
+    }
+
     return candidates[0] || '';
   }
 
@@ -170,34 +181,6 @@
     if (!(node instanceof Element)) return null;
     if (node.matches?.(AVATAR_SELECTOR)) return node;
     return node.closest?.(AVATAR_SELECTOR) || null;
-  }
-
-  function copyText(text) {
-    const value = String(text || '').trim();
-    if (!value) return false;
-    try {
-      if (navigator?.clipboard?.writeText) {
-        navigator.clipboard.writeText(value).catch(() => {});
-        return true;
-      }
-    } catch {
-      // continue to fallback
-    }
-
-    try {
-      const textarea = document.createElement('textarea');
-      textarea.value = value;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      textarea.style.pointerEvents = 'none';
-      document.body.appendChild(textarea);
-      textarea.select();
-      const ok = document.execCommand('copy');
-      textarea.remove();
-      return !!ok;
-    } catch {
-      return false;
-    }
   }
 
   function getRuntimeApi() {
@@ -212,6 +195,22 @@
     personName: '',
   };
 
+  function notifyBackgroundContext() {
+    const runtime = getRuntimeApi();
+    runtime?.sendMessage?.({
+      action: 'bc-context-updated',
+      personId: contextState.personId,
+      personName: contextState.personName,
+    });
+  }
+
+  function clearContextState() {
+    contextState.avatarEl = null;
+    contextState.personId = '';
+    contextState.personName = '';
+    notifyBackgroundContext();
+  }
+
   function updateContextFromNode(node) {
     const avatarEl = findAvatarElementFromNode(node);
     if (!avatarEl) return false;
@@ -221,6 +220,7 @@
     contextState.avatarEl = avatarEl;
     contextState.personId = personId;
     contextState.personName = getPersonNameFromAvatarElement(avatarEl);
+    notifyBackgroundContext();
     return true;
   }
 
@@ -490,6 +490,7 @@
       'contextmenu',
       (event) => {
         const target = event.target instanceof Element ? event.target : null;
+        clearContextState();
         if (!target) return;
         updateContextFromNode(target);
       },
@@ -499,21 +500,16 @@
     const runtime = getRuntimeApi();
     runtime?.onMessage?.addListener?.((message) => {
       const action = message?.action;
-      if (action !== 'bc-copy-person-id' && action !== 'bc-add-person') return;
-
-      if (!contextState.personId && contextState.avatarEl instanceof Element) {
-        updateContextFromNode(contextState.avatarEl);
+      if (action === 'bc-get-context') {
+        return {
+          personId: contextState.personId,
+          personName: contextState.personName,
+        };
       }
+      if (action !== 'bc-add-person') return;
+
       if (!contextState.personId) return;
-
-      if (action === 'bc-copy-person-id') {
-        copyText(contextState.personId);
-        return;
-      }
-
-      if (action === 'bc-add-person') {
-        addPersonFromContext().catch(() => {});
-      }
+      addPersonFromContext().catch(() => {});
     });
   } catch {
     // Ignore
