@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Confidentialité · Basecamp User Highlighter</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <style>
+    :root { --bg: #10201a; --ink: #f2f7f3; --text: #a9c0b3; --muted: #7f9a8b; --green: #2fb573; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.7; }
+    main { max-width: 760px; margin: 0 auto; padding: 40px 16px 64px; }
+    a { color: var(--green); }
+    .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 800; text-decoration: none; }
+    .brand img { width: 28px; height: 28px; }
+    h1 { color: var(--ink); font-size: 36px; margin: 32px 0 4px; }
+    h2 { color: var(--ink); font-size: 20px; margin: 32px 0 6px; }
+    .updated { color: var(--muted); margin: 0; }
+    code { padding: 1px 6px; border-radius: 4px; background: #1b3028; color: var(--ink); font-size: .9em; }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="brand" href="./"><img src="icon.svg" alt="">Basecamp User Highlighter</a>
+    <h1>Politique de confidentialité</h1>
+    <p class="updated">Dernière mise à jour : 31 octobre 2026</p>
+    <h2>En bref</h2>
+    <p>Basecamp User Highlighter ne collecte, ne vend, ne partage et ne transmet aucune donnée personnelle. L'extension n'a ni serveur, ni statistiques, ni pistage. Tout ce qu'elle enregistre reste dans votre navigateur.</p>
+    <h2>Ce qui est enregistré</h2>
+    <p>Dans le stockage local de l'extension, sur votre appareil :</p>
+    <ul>
+      <li><strong>Les personnes surlignées</strong> : identifiant Basecamp, nom affiché, couleur, activée ou non.</li>
+      <li><strong>Les personnes croisées</strong> dans les pages Basecamp que vous ouvrez : identifiant, nom et adresse de l'avatar, pour les proposer en ajout rapide.</li>
+      <li><strong>Vos réglages</strong> : intensité et options d'affichage.</li>
+    </ul>
+    <h2>Réseau</h2>
+    <p>L'extension ne fait aucune requête de son côté, à part l'affichage dans son popup des avatars hébergés par Basecamp. Elle n'utilise pas l'API de Basecamp et ne modifie rien sur votre compte. Elle ne fonctionne que sur <code>app.basecamp.com</code> et <code>3.basecamp.com</code>.</p>
+    <h2>Autorisations</h2>
+    <ul>
+      <li><code>storage</code> : enregistrer les personnes et les réglages.</li>
+      <li><code>contextMenus</code> : l'entrée du clic droit sur un avatar.</li>
+      <li><code>scripting</code> : activer l'extension dans les onglets Basecamp déjà ouverts après une installation ou une mise à jour.</li>
+      <li>Accès à <code>app.basecamp.com</code> et <code>3.basecamp.com</code> : surligner les tâches de ces pages.</li>
+    </ul>
+    <h2>Supprimer vos données</h2>
+    <p>Désinstaller l'extension efface tout son stockage.</p>
+    <h2>Contact</h2>
+    <p><a href="https://github.com/lepetitpaco/basecamp-user-highlighter/issues">Ouvrez un ticket sur GitHub</a>.</p>
+  </main>
+</body>
+</html>

@@ -1,29 +1,45 @@
-const MENU_ADD_PERSON = 'bc-add-person';
-const BASECAMP_PATTERNS = ['https://*.basecamp.com/*', 'https://3.basecamp.com/*'];
-const DEFAULT_ADD_TITLE = 'Ajouter cette personne';
+// Right-click menu on avatars. The content script knows which avatar was clicked,
+// so this only forwards the click. Also lets an unpacked build be reloaded from a
+// Basecamp tab (document event "basecamp-user-highlighter:dev-reload"), and its storage set
+// from there for tests ("basecamp-user-highlighter:dev-storage"). Both do nothing in store builds.
+const api = globalThis.browser ?? globalThis.chrome;
+const MENU_ID = 'bh-toggle-person';
 
-function createContextMenus() {
-  chrome.contextMenus.removeAll(() => {
-    chrome.contextMenus.create({
-      id: MENU_ADD_PERSON,
-      title: DEFAULT_ADD_TITLE,
+const BASECAMP_PAGES = ['https://app.basecamp.com/*', 'https://3.basecamp.com/*'];
+
+function createMenu() {
+  api.contextMenus.removeAll(() => {
+    api.contextMenus.create({
+      id: MENU_ID,
+      title: 'Surligner cette personne / arrêter',
       contexts: ['image'],
-      documentUrlPatterns: BASECAMP_PATTERNS,
+      documentUrlPatterns: BASECAMP_PAGES,
     });
   });
 }
 
-// Ensure stale/legacy menu entries are removed whenever worker starts.
-createContextMenus();
+// After an install or an update, Chrome leaves the open tabs without a working content
+// script: without this, they do nothing until reloaded
+async function injectIntoOpenTabs() {
+  for (const tab of await api.tabs.query({ url: BASECAMP_PAGES })) {
+    api.scripting.executeScript({ target: { tabId: tab.id }, files: ['src/settings.js', 'src/highlight.js'] }).catch(() => {});
+  }
+}
 
-chrome.runtime.onInstalled.addListener(createContextMenus);
-chrome.runtime.onStartup.addListener(createContextMenus);
+api.runtime.onInstalled.addListener(createMenu);
+api.runtime.onInstalled.addListener(injectIntoOpenTabs);
+api.runtime.onStartup.addListener(createMenu);
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (!tab?.id) return;
-  if (info.menuItemId !== MENU_ADD_PERSON) return;
-  chrome.tabs.sendMessage(tab.id, { action: MENU_ADD_PERSON }, () => {
-    // Ignore tabs without our content script.
-    void chrome.runtime.lastError;
+api.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId !== MENU_ID || !tab?.id) return;
+  api.tabs.sendMessage(tab.id, { type: 'toggle-person' }).catch(() => {});
+});
+
+api.runtime.onMessage.addListener(message => {
+  if (message?.type !== 'dev-reload' && message?.type !== 'dev-storage') return;
+  api.management.getSelf().then(self => {
+    if (self.installType !== 'development') return;
+    if (message.type === 'dev-reload') api.runtime.reload();
+    else api.storage.local.set(message.items);
   });
 });
