@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "Basecamp User Highlighter",
+  "version": "1.1.0",
+  "description": "Repérez d'un coup d'œil le travail de vos collègues dans Basecamp : cartes et to-dos s'allument à la couleur de chaque personne. Sans pistage.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://app.basecamp.com/*",
+    "https://3.basecamp.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Basecamp User Highlighter",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://app.basecamp.com/*",
+        "https://3.basecamp.com/*"
+      ],
+      "js": [
+        "src/settings.js",
+        "src/highlight.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
