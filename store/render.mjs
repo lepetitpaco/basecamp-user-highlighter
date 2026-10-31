@@ -29,11 +29,11 @@ for (const size of [16, 32, 48, 128]) {
 }
 
 const scenes = [
-  ['hero', 1280, 800, 'screenshots/1-qui-fait-quoi.png'],
-  ['shared', 1280, 800, 'screenshots/2-une-couleur-par-personne.png'],
-  ['lists', 1280, 800, 'screenshots/3-listes-et-mes-taches.png'],
-  ['options', 1280, 800, 'screenshots/4-griser-ou-bordure.png'],
-  ['popup', 1280, 800, 'screenshots/5-ajout-rapide.png'],
+  ['hero', 1280, 800, 'screenshots/1-who-does-what.png'],
+  ['shared', 1280, 800, 'screenshots/2-one-color-per-person.png'],
+  ['lists', 1280, 800, 'screenshots/3-boards-and-lists.png'],
+  ['options', 1280, 800, 'screenshots/4-dim-or-border.png'],
+  ['popup', 1280, 800, 'screenshots/5-quick-add.png'],
   ['promo', 440, 280, 'promo-small-440x280.png'],
   ['marquee', 1400, 560, 'promo-marquee-1400x560.png'],
 ];

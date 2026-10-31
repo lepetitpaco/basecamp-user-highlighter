@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Basecamp User Highlighter</title>
@@ -74,32 +74,32 @@
   <header>
     <img src="icons/icon-48.png" alt="">
     <h1>Basecamp User Highlighter</h1>
-    <label class="switch" title="Activer ou désactiver le surlignage"><input id="enabled" type="checkbox" aria-label="Surlignage"><span></span></label>
+    <label class="switch" title="Turn highlighting on or off"><input id="enabled" type="checkbox" aria-label="Highlighting"><span></span></label>
   </header>
   <main>
     <section class="card" id="access" hidden>
-      <div class="hint">L’extension a besoin de votre autorisation pour fonctionner sur Basecamp.</div>
-      <button class="action" id="grant" type="button">Autoriser sur Basecamp</button>
+      <div class="hint">The extension needs your permission to run on Basecamp.</div>
+      <button class="action" id="grant" type="button">Allow on Basecamp</button>
     </section>
     <section class="card">
-      <h2>Personnes surlignées</h2>
+      <h2>Highlighted people</h2>
       <div id="persons"></div>
     </section>
     <section class="card">
-      <h2>Ajout rapide</h2>
-      <input id="search" type="search" placeholder="Rechercher quelqu’un" aria-label="Rechercher quelqu’un" hidden>
+      <h2>Quick add</h2>
+      <input id="search" type="search" placeholder="Search for someone" aria-label="Search for someone" hidden>
       <div id="page"></div>
     </section>
     <section class="card">
       <div class="slider">
-        <label for="opacity">Intensité</label>
+        <label for="opacity">Intensity</label>
         <input id="opacity" type="range" min="0.05" max="0.8" step="0.01">
       </div>
-      <label class="option"><input id="dimOthers" type="checkbox"><span>Griser les tâches des autres</span></label>
-      <label class="option"><input id="borderOnly" type="checkbox"><span>Bordure seule, sans couleur sur le texte</span></label>
+      <label class="option"><input id="dimOthers" type="checkbox"><span>Dim everyone else's tasks</span></label>
+      <label class="option"><input id="borderOnly" type="checkbox"><span>Border only, no color behind the text</span></label>
     </section>
   </main>
-  <footer>Astuce : clic droit sur un avatar dans Basecamp pour ajouter ou retirer quelqu’un.</footer>
+  <footer>Tip: right-click an avatar in Basecamp to add or remove someone.</footer>
   <script src="src/settings.js"></script>
   <script src="popup.js"></script>
 </body>

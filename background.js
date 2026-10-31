@@ -11,7 +11,7 @@ function createMenu() {
   api.contextMenus.removeAll(() => {
     api.contextMenus.create({
       id: MENU_ID,
-      title: 'Surligner cette personne / arrêter',
+      title: 'Highlight this person / stop highlighting',
       contexts: ['image'],
       documentUrlPatterns: BASECAMP_PAGES,
     });

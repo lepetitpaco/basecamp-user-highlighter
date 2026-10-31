@@ -10,39 +10,39 @@ Ne pas lister de domaines ou de mots clés dans la fiche : Chrome a déjà rejet
 
 ## 2. Fiche
 
-**Catégorie** : Outils. **Langue** : français.
+**Catégorie** : Outils. **Langue** : anglais.
 
 **Description** :
 ```
-Qui fait quoi dans Basecamp, d'un coup d'œil.
+Who does what in Basecamp, at a glance.
 
-Basecamp User Highlighter allume les cartes et les to-dos de vos collègues dans la couleur de chacun, pour repérer le travail de quelqu'un sans lire chaque avatar.
+Basecamp User Highlighter lights up your teammates' cards and to-dos in each person's color, so you can spot someone's work without reading every avatar.
 
-★ UNE COULEUR PAR PERSONNE
-• Sur les tableaux de cartes, les listes de to-dos et Mes tâches
-• Une tâche partagée affiche toutes ses couleurs
-• Un anneau sur l'avatar indique de qui il s'agit
-• La teinte passe sous le texte, qui reste lisible
+★ ONE COLOR PER PERSON
+• On card tables, to-do lists and My Tasks
+• A shared task shows all its colors
+• A ring on the avatar tells you who is who
+• The tint goes under the text, which stays readable
 
-★ AJOUT EN UN CLIC
-• Les gens croisés dans Basecamp apparaissent tout seuls dans le popup, avec une recherche
-• Ou clic droit sur un avatar
-• Chaque nouvelle personne reçoit une couleur libre
+★ ONE-CLICK ADD
+• People you come across in Basecamp show up in the popup on their own, with a search
+• Or right-click an avatar
+• Each new person gets a free color
 
-★ À VOTRE GOÛT
-• Sélecteur de couleur intégré
-• Intensité réglable
-• Griser les tâches des autres pour vous concentrer
-• Bordure seule, sans couleur sur le texte
-• Une pause par personne, et un interrupteur général
+★ YOUR WAY
+• Built-in color picker
+• Adjustable intensity
+• Dim everyone else's tasks to focus
+• Border only, no color behind the text
+• Pause anyone, or turn it all off
 
-★ RESPECT DE LA VIE PRIVÉE
-• Aucun pistage, aucune statistique, aucune pub, aucun compte
-• Rien n'est modifié sur votre compte Basecamp, et vos collègues ne voient rien
-• Tout reste dans votre navigateur
+★ PRIVATE BY DESIGN
+• No tracking, no analytics, no ads, no account
+• Nothing changes on your Basecamp account, and your teammates see nothing
+• Everything stays in your browser
 • Open source
 
-Basecamp User Highlighter est un projet indépendant, sans lien avec Basecamp ni 37signals, et non approuvé par eux.
+Basecamp User Highlighter is an independent project, not affiliated with or endorsed by Basecamp or 37signals.
 ```
 
 | Champ | Fichier |
@@ -60,27 +60,27 @@ Basecamp User Highlighter est un projet indépendant, sans lien avec Basecamp ni
 
 **Objectif unique** :
 ```
-Surligner dans Basecamp les cartes et les to-dos assignés aux personnes choisies, dans la couleur de chacune.
+Highlight in Basecamp the cards and to-dos assigned to the chosen people, in each person's color.
 ```
 
 **Justification de storage** :
 ```
-Enregistre localement les personnes surlignées, celles croisées dans Basecamp pour l'ajout rapide, et les réglages. Rien n'est envoyé ailleurs.
+Saves locally the highlighted people, those met in Basecamp for the quick add, and the settings. Nothing is sent anywhere.
 ```
 
 **Justification de contextMenus** :
 ```
-Ajoute au clic droit sur un avatar l'entrée qui surligne cette personne ou arrête de la surligner.
+Adds to the right-click menu on avatars the entry that highlights this person or stops highlighting them.
 ```
 
 **Justification de scripting** :
 ```
-Après une installation ou une mise à jour, charge les scripts de l'extension dans les onglets Basecamp déjà ouverts, pour éviter de devoir les recharger. Aucun code distant.
+After an install or an update, loads the extension's own scripts into Basecamp tabs already open, so they don't need a reload. No remote code.
 ```
 
 **Justification de l'accès à l'hôte** :
 ```
-L'extension ne fonctionne que sur Basecamp : elle y repère les personnes assignées aux tâches et surligne ces tâches. Elle ne tourne sur aucun autre site.
+The extension only works on Basecamp: it finds who is assigned to each task and highlights those tasks. It runs on no other site.
 ```
 
 **Code distant** : non.
@@ -95,4 +95,8 @@ Sans frais, public, toutes les régions.
 
 ## 5. Instructions de test
 
-Un compte Basecamp est nécessaire. Dans le projet d'exemple « Making a Podcast », ouvrir le Card Table, puis le popup de l'extension, et cliquer sur quelqu'un dans « Ajout rapide » : ses cartes se surlignent. Prévoir un compte de test si l'examen en demande un : **à créer et fournir par la personne**.
+```
+A Basecamp account is needed. In the "Making a Podcast" sample project, open the Card Table, open the extension popup and click someone under "Quick add": their cards get highlighted.
+```
+
+Compte de test si l'examen en demande un : **à créer et fournir par la personne**.

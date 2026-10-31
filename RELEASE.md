@@ -16,7 +16,7 @@ Aucune.
 
 ## Version
 
-1. Relire `README.md` et les textes des stores : pas de listes de domaines ou de mots clés. Vraies captures seulement.
+1. Relire `README.md` et les textes des stores, en anglais : pas de listes de domaines ou de mots clés. Vraies captures seulement.
 2. Numéro dans les trois manifests et `CHANGELOG.md`. `scripts/package.sh` ; zip dans `packages/`.
 
 ## Prod

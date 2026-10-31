@@ -187,7 +187,7 @@
     const avatar = rightClicked;
     const id = avatar && personId(avatar);
     if (!id) {
-      showToast('Faites un clic droit sur l’avatar d’une personne pour la surligner', '#90a4ae');
+      showToast('Right-click a person\'s avatar to highlight them', '#90a4ae');
       return;
     }
     const current = await bhLoad();
@@ -195,11 +195,11 @@
     if (current.persons[id]) {
       const { color } = current.persons[id];
       delete current.persons[id];
-      showToast(`${name} n’est plus surligné·e`, color);
+      showToast(`Stopped highlighting ${name}`, color);
     } else {
       const color = bhNextColor(current.persons);
       current.persons[id] = { enabled: true, description: personName(avatar), color };
-      showToast(`${name} est surligné·e`, color);
+      showToast(`Highlighting ${name}`, color);
     }
     await bhSave({ persons: current.persons });
   }
