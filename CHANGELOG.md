@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2
+
+- Interface, website and store listings in English.
+
 ## 1.1.1
 
 - Same code as 1.1.0, published on Firefox Add-ons: AMO doesn't reuse a version number.
@@ -16,4 +20,4 @@
 - Now runs only on `app.basecamp.com` and `3.basecamp.com`.
 - Open Basecamp tabs start working right after an install or an update, without a reload.
 - Removed: adding a person by typing their id.
-- New name and icon, interface in French.
+- New name and icon.

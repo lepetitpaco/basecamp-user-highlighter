@@ -12,7 +12,7 @@
   <a href="https://lepetitpaco.github.io/basecamp-user-highlighter/privacy.html">Privacy</a>
 </p>
 
-![Basecamp User Highlighter](store/screenshots/1-qui-fait-quoi.png)
+![Basecamp User Highlighter](store/screenshots/1-who-does-what.png)
 
 ## Features
 
@@ -23,7 +23,7 @@
 
 Only assignees count: the "Added by" avatar and subscribers don't trigger a highlight.
 
-**No tracking, no network requests of its own, nothing changed on your Basecamp account.** People, the names and avatar addresses of those met in Basecamp, and settings stay in the extension's local storage. The interface is in French. The permissions are `storage`, `contextMenus`, `scripting` and access to `app.basecamp.com` and `3.basecamp.com`.
+**No tracking, no network requests of its own, nothing changed on your Basecamp account.** People, the names and avatar addresses of those met in Basecamp, and settings stay in the extension's local storage. The permissions are `storage`, `contextMenus`, `scripting` and access to `app.basecamp.com` and `3.basecamp.com`.
 
 ## How it works
 

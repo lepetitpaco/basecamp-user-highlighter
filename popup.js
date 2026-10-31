@@ -75,12 +75,12 @@
     hue.min = 0;
     hue.max = 360;
     hue.value = h;
-    hue.setAttribute('aria-label', 'Teinte');
+    hue.setAttribute('aria-label', 'Hue');
     const hex = element('input', 'picker-hex');
     hex.value = person.color;
     hex.spellcheck = false;
     hex.maxLength = 7;
-    hex.setAttribute('aria-label', 'Couleur en hexadécimal');
+    hex.setAttribute('aria-label', 'Hex color');
 
     function show() {
       area.style.backgroundColor = `hsl(${h} 100% 50%)`;
@@ -141,7 +141,7 @@
     const ids = Object.keys(persons).sort((a, b) =>
       (persons[a].description || a).localeCompare(persons[b].description || b));
     if (!ids.length) {
-      list.append(element('div', 'hint', 'Personne pour l’instant. Cliquez sur quelqu’un ci-dessous, ou faites un clic droit sur un avatar dans Basecamp.'));
+      list.append(element('div', 'hint', 'Nobody yet. Click someone below, or right-click an avatar in Basecamp.'));
     }
     for (const id of ids) {
       const person = persons[id];
@@ -150,8 +150,8 @@
       const dot = element('button', 'dot');
       dot.type = 'button';
       dot.style.background = person.color;
-      dot.title = 'Changer la couleur';
-      dot.setAttribute('aria-label', 'Changer la couleur');
+      dot.title = 'Change color';
+      dot.setAttribute('aria-label', 'Change color');
       dot.style.borderColor = person.color;
       if (known[id]?.avatar) dot.append(avatarImage(known[id].avatar));
       dot.addEventListener('click', () => {
@@ -164,7 +164,7 @@
       name.placeholder = id;
       name.spellcheck = false;
       name.dataset.person = id;
-      name.setAttribute('aria-label', 'Nom');
+      name.setAttribute('aria-label', 'Name');
       name.addEventListener('change', () => {
         person.description = name.value.trim();
         savePersons();
@@ -174,16 +174,16 @@
       const seen = people?.find(item => item.id === id);
       if (seen) {
         const count = element('span', 'count', seen.tasks);
-        count.title = `${seen.tasks} tâche(s) sur cette page`;
+        count.title = `Tasks on this page: ${seen.tasks}`;
         row.append(count);
       }
 
       const toggle = element('label', 'switch');
-      toggle.title = person.enabled ? 'Mettre en pause' : 'Reprendre';
+      toggle.title = person.enabled ? 'Pause' : 'Resume';
       const input = element('input');
       input.type = 'checkbox';
       input.checked = person.enabled;
-      input.setAttribute('aria-label', 'Surligner cette personne');
+      input.setAttribute('aria-label', 'Highlight this person');
       input.addEventListener('change', () => {
         person.enabled = input.checked;
         savePersons();
@@ -191,7 +191,7 @@
       });
       toggle.append(input, element('span'));
 
-      row.append(toggle, iconButton('×', 'Retirer', () => {
+      row.append(toggle, iconButton('×', 'Remove', () => {
         delete persons[id];
         savePersons();
         renderAll();
@@ -205,7 +205,7 @@
           const swatch = element('button', color === person.color ? 'current' : '');
           swatch.type = 'button';
           swatch.style.background = color;
-          swatch.setAttribute('aria-label', `Couleur ${color}`);
+          swatch.setAttribute('aria-label', `Color ${color}`);
           swatch.addEventListener('click', () => {
             person.color = color;
             paletteFor = null;
@@ -246,9 +246,9 @@
     const shown = all.filter(person => person.name.toLowerCase().includes(query));
     if (!shown.length) {
       list.className = 'hint';
-      list.textContent = query ? 'Aucun résultat.'
-        : people ? 'Personne d’autre pour l’instant. Les gens croisés dans Basecamp apparaîtront ici.'
-          : 'Ouvrez une page Basecamp : les gens croisés apparaîtront ici.';
+      list.textContent = query ? 'No results.'
+        : people ? 'Nobody else yet. People you come across in Basecamp will show up here.'
+          : 'Open a Basecamp page: people you come across will show up here.';
       return;
     }
     list.className = 'chips';
@@ -256,8 +256,8 @@
       const label = person.name || person.id;
       const chip = element('button', `chip${person.here ? '' : ' away'}`);
       chip.type = 'button';
-      chip.setAttribute('aria-label', `Surligner ${label}`);
-      chip.title = person.here ? `${person.tasks} tâche(s) sur cette page` : 'Vu sur une autre page';
+      chip.setAttribute('aria-label', `Highlight ${label}`);
+      chip.title = person.here ? `Tasks on this page: ${person.tasks}` : 'Seen on another page';
       if (person.avatar) chip.append(avatarImage(person.avatar));
       chip.append(element('span', '', label));
       if (person.tasks) chip.append(element('span', 'count', person.tasks));
