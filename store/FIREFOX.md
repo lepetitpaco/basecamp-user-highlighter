@@ -1,6 +1,9 @@
 # Firefox Add-ons (AMO)
 
-Pas encore soumise.
+Page développeur : https://addons.mozilla.org/developers/addon/basecamp-user-highlighter/edit
+Page publique (une fois approuvée) : https://addons.mozilla.org/firefox/addon/basecamp-user-highlighter/
+
+**État** : passé en listé le 2026-10-31 avec la 1.1.1, en attente d'examen. La 1.1.0 reste une version « On your own », AMO ne réutilisant pas un numéro.
 
 ## Package
 
@@ -50,7 +53,7 @@ Basecamp User Highlighter allume les cartes et les to-dos de vos collègues dans
 Basecamp User Highlighter est un projet indépendant, sans lien avec Basecamp ni 37signals, et non approuvé par eux.
 ```
 
-**Catégorie** : Productivité. **Page d'accueil** : `https://lepetitpaco.github.io/basecamp-user-highlighter/`
+**Catégorie** : « My add-on doesn't fit » (aucune ne convient). **Licence** : MIT. **Page d'accueil** : `https://lepetitpaco.github.io/basecamp-user-highlighter/`
 
 **Confidentialité** : `https://lepetitpaco.github.io/basecamp-user-highlighter/privacy.html`
 
