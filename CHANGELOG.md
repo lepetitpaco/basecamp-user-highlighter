@@ -1,6 +1,10 @@
 # Changelog
 
-## 1.1.0 (unreleased)
+## 1.1.1
+
+- Same code as 1.1.0, published on Firefox Add-ons: AMO doesn't reuse a version number.
+
+## 1.1.0
 
 - New popup replaces the options page: quick add of everyone met in Basecamp, one switch per person, built-in color picker and palette.
 - Right-click an avatar to add or remove a person, with a confirmation message.
