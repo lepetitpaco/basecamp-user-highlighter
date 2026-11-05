@@ -291,8 +291,10 @@
     bhSave({ highlightOpacity: opacity });
   });
 
-  // Firefox treats host permissions as optional: the user has to grant them
-  if (!(await bhApi().permissions.contains({ origins: ORIGINS }))) {
+  // Firefox treats host permissions as optional: the user has to grant them.
+  // Some hosts (Electron, e.g. homedash) have no permissions API: access is then the manifest's.
+  const granted = await (async () => (await bhApi().permissions?.contains?.({ origins: ORIGINS })) ?? true)().catch(() => true);
+  if (!granted) {
     byId('access').hidden = false;
     byId('grant').addEventListener('click', async () => {
       if (await bhApi().permissions.request({ origins: ORIGINS })) byId('access').hidden = true;
